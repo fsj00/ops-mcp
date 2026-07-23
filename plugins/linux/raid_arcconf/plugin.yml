@@ -1,0 +1,21 @@
+name: linux_raid_arcconf
+version: "1.0"
+description: Adaptec/Microchip RAID 只读查询（arcconf）。建议先 linux_raid_detect
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  action:
+    type: string
+    required: false
+    description: "只读动作：list|config|status|version（默认 list）"
+  controller:
+    type: string
+    required: false
+    description: 控制器编号，默认 1（config/status 使用）
+runtime: javascript
+timeout: 60s

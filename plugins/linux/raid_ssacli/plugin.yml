@@ -1,0 +1,25 @@
+name: linux_raid_ssacli
+version: "1.0"
+description: HPE Smart Array 只读查询（ssacli/hpssacli）。建议先 linux_raid_detect
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  action:
+    type: string
+    required: false
+    description: "只读动作：summary|status|config|detail（默认 summary）"
+  slot:
+    type: string
+    required: false
+    description: 控制器 slot（detail 时可用，如 0）；省略则 all
+  binary:
+    type: string
+    required: false
+    description: 可执行名，默认自动尝试 ssacli/hpssacli/hpacucli
+runtime: javascript
+timeout: 60s

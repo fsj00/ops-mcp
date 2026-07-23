@@ -287,6 +287,15 @@ flowchart LR
 | `linux_lsof` | 打开文件 / 端口 | ssh |
 | `linux_nslookup` | DNS（nslookup） | ssh |
 | `linux_dig` | DNS（dig） | ssh |
+| `linux_raid_detect` | 探测 RAID 厂商 / CLI / 软 RAID，给出建议 Plugin | ssh |
+| `linux_raid_storcli` | Broadcom/LSI MegaRAID（storcli）只读 | ssh |
+| `linux_raid_megacli` | Broadcom/LSI 旧版 MegaCli 只读 | ssh |
+| `linux_raid_perccli` | Dell PERC（perccli）只读 | ssh |
+| `linux_raid_ssacli` | HPE Smart Array（ssacli/hpssacli）只读 | ssh |
+| `linux_raid_mdadm` | Linux 软件 RAID（mdadm）只读 | ssh |
+| `linux_raid_arcconf` | Adaptec/Microchip（arcconf）只读 | ssh |
+
+RAID：先 `linux_raid_detect`，再按 `suggested_plugin` 调用厂商只读 Tool；`action` 为白名单，不暴露写操作。
 
 ### Docker
 

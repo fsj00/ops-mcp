@@ -1,0 +1,25 @@
+name: linux_raid_storcli
+version: "1.0"
+description: Broadcom/LSI MegaRAID 只读查询（storcli）。建议先 linux_raid_detect
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  action:
+    type: string
+    required: false
+    description: "只读动作：summary|controllers|virtual_drives|physical_drives|all（默认 summary）"
+  controller:
+    type: string
+    required: false
+    description: 控制器编号，默认 ALL（如 0）
+  binary:
+    type: string
+    required: false
+    description: 可执行名，默认自动尝试 storcli64/storcli
+runtime: javascript
+timeout: 60s

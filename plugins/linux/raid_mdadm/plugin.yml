@@ -1,0 +1,21 @@
+name: linux_raid_mdadm
+version: "1.0"
+description: Linux 软件 RAID（md）只读查询（mdadm /proc/mdstat）。建议先 linux_raid_detect
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  action:
+    type: string
+    required: false
+    description: "只读动作：mdstat|scan|detail|examine（默认 mdstat）"
+  device:
+    type: string
+    required: false
+    description: "md 设备路径，detail 时必填，如 /dev/md0"
+runtime: javascript
+timeout: 30s

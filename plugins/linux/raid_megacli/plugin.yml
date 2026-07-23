@@ -1,0 +1,21 @@
+name: linux_raid_megacli
+version: "1.0"
+description: Broadcom/LSI MegaRAID 只读查询（旧版 MegaCli）。建议先 linux_raid_detect；有 storcli 时优先 linux_raid_storcli
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  action:
+    type: string
+    required: false
+    description: "只读动作：adapter|virtual_drives|physical_drives|bbu|config（默认 adapter）"
+  binary:
+    type: string
+    required: false
+    description: 可执行名，默认自动尝试 MegaCli64/MegaCli/megacli
+runtime: javascript
+timeout: 60s

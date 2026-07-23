@@ -1,0 +1,13 @@
+name: linux_raid_detect
+version: "1.0"
+description: 探测主机 RAID 类型（厂商 / CLI / 软件 RAID），并给出建议使用的只读 Plugin
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 45s

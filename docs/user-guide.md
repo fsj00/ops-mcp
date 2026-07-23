@@ -294,6 +294,15 @@ curl -s -X POST localhost:20267/mcp \
 | `linux_lsof` | 打开的文件/端口 | `args`（可选，默认 `-i`） |
 | `linux_nslookup` | DNS（`nslookup`） | `name`（必填），`server`（可选） |
 | `linux_dig` | DNS（`dig`） | `name`（必填），`type` / `server`（可选） |
+| `linux_raid_detect` | **先调用**：探测 RAID 厂商 / CLI / 软 RAID，并给出建议 Plugin | — |
+| `linux_raid_storcli` | Broadcom/LSI MegaRAID（`storcli`）只读 | `action`（可选：summary/controllers/virtual_drives/physical_drives/all），`controller`（可选） |
+| `linux_raid_megacli` | Broadcom/LSI 旧版（`MegaCli`）只读 | `action`（可选：adapter/virtual_drives/physical_drives/bbu/config） |
+| `linux_raid_perccli` | Dell PERC（`perccli`）只读 | 同 `linux_raid_storcli` 的 `action` / `controller` |
+| `linux_raid_ssacli` | HPE Smart Array（`ssacli`/`hpssacli`）只读 | `action`（可选：summary/status/config/detail），`slot`（可选） |
+| `linux_raid_mdadm` | Linux 软件 RAID（`mdadm` / `/proc/mdstat`）只读 | `action`（可选：mdstat/scan/detail/examine），`device`（detail 时必填） |
+| `linux_raid_arcconf` | Adaptec/Microchip（`arcconf`）只读 | `action`（可选：list/config/status/version），`controller`（可选） |
+
+RAID 推荐流程：先 `linux_raid_detect` → 按返回的 `recommended` / `suggested_plugin` 调用对应厂商 Plugin。以上均为只读查询，不暴露改配 / 重建 / 删除类参数。
 
 ### 3.3 Docker
 
