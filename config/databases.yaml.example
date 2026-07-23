@@ -1,0 +1,30 @@
+databases:
+  - name: local-postgres
+    description: local postgres (dev)
+    labels:
+      env: dev
+    type: postgresql
+    connection:
+      host: 127.0.0.1
+      port: 5432
+      username: postgres
+      password: "CHANGE_ME"
+      database: postgres
+      sslmode: disable
+    readonly: true
+    limit: 1000   # SELECT 最大返回行数，缺省 1000
+
+  # - name: order-mysql
+  #   description: order service mysql (readonly)
+  #   labels:
+  #     env: production
+  #     app: order
+  #   type: mysql
+  #   connection:
+  #     host: 10.10.2.10
+  #     port: 3306
+  #     username: readonly
+  #     password: "CHANGE_ME"
+  #     database: orders
+  #   readonly: true
+  #   limit: 1000

@@ -1,0 +1,17 @@
+name: linux_ps
+version: "1.0"
+description: 列出远程主机进程
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  filter:
+    type: string
+    required: false
+    description: 可选 grep 过滤关键字
+runtime: javascript
+timeout: 10s

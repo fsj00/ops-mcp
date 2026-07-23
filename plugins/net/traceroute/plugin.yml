@@ -1,0 +1,17 @@
+name: host_traceroute
+version: "1.0"
+description: 在本机执行 traceroute（只读探测）；须在 commands.yaml 登记 name=traceroute
+type: command
+target:
+  type: command
+input:
+  host:
+    type: string
+    required: true
+    description: 目标主机名或 IP
+  max_hops:
+    type: number
+    required: false
+    description: 最大跳数（-m）；缺省由系统默认
+runtime: javascript
+timeout: 60s

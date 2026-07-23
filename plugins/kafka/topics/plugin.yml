@@ -1,0 +1,27 @@
+name: kafka_topics
+version: "1.0"
+description: 列出 Kafka topics（支持 prefix/limit，默认不含内部 topic）
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  prefix:
+    type: string
+    required: false
+    description: 仅返回以此前缀开头的 topic
+  limit:
+    type: number
+    required: false
+    description: 最大返回条数（受 kafka.yaml limit 上限约束）
+  include_internal:
+    type: boolean
+    required: false
+    description: 是否包含内部 topic（如 __consumer_offsets）
+runtime: javascript
+timeout: 30s

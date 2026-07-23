@@ -1,0 +1,13 @@
+name: linux_hostnamectl
+version: "1.0"
+description: 查看主机名与机器信息（hostnamectl）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

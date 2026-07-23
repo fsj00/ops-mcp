@@ -1,0 +1,25 @@
+name: redis_scard
+version: "1.0"
+description: Redis SCARD（Set 成员数）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: Set key
+runtime: javascript
+timeout: 30s

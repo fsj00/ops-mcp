@@ -1,0 +1,13 @@
+name: linux_netstat
+version: "1.0"
+description: 查看网络连接（ss -tunlp）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

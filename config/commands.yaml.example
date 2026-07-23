@@ -1,0 +1,36 @@
+# 本机可执行文件白名单（Command Connector）
+# 复制为 commands.yaml，或直接使用仓库默认 commands.yaml。
+# path 支持字符串或数组；数组按顺序取第一个本机存在且可执行的路径。
+# 通常无密钥；禁止在此文件写入密码 / Token。
+#
+# JS: ctx.command.exec({ command: "<name>", args: [...] })
+# name 必须匹配下方条目；path 必须是绝对路径（各系统可能不同）。
+
+commands:
+  - name: ping
+    description: "本机 ping（次数与目标由 Plugin 约束）"
+    path:
+      - /sbin/ping
+      - /bin/ping
+      - /usr/bin/ping
+      - /usr/sbin/ping
+
+  - name: traceroute
+    description: "本机 traceroute（目标由 Plugin 约束）"
+    path:
+      - /usr/sbin/traceroute
+      - /usr/bin/traceroute
+      - /sbin/traceroute
+      - /bin/traceroute
+
+  - name: dig
+    description: "本机 dig DNS 查询（参数由 Plugin 约束）"
+    path:
+      - /usr/bin/dig
+      - /bin/dig
+
+  - name: nslookup
+    description: "本机 nslookup DNS 查询（参数由 Plugin 约束）"
+    path:
+      - /usr/bin/nslookup
+      - /bin/nslookup

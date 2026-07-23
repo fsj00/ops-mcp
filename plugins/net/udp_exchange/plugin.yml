@@ -1,0 +1,31 @@
+name: udp_exchange
+version: "1.0"
+description: |
+  UDP 原始字节交换（调试/冒烟）。将 ip/port/data 透传给 ctx.udp.exchange。
+  不建议在生产业务 Plugin 中透传任意地址；正式能力应在 main.js 内固定或校验目标。
+type: command
+target:
+  type: udp
+input:
+  ip:
+    type: string
+    required: true
+    description: 目标 IP 或主机名
+  port:
+    type: number
+    required: true
+    description: 目标端口（1–65535）
+  data:
+    type: string
+    required: true
+    description: 请求载荷（hex 字符串，如 0102030a）
+  timeout:
+    type: string
+    required: false
+    description: 超时（如 2s）；缺省由 Connector 默认
+  max_response_bytes:
+    type: number
+    required: false
+    description: 响应字节上限；缺省 65536
+runtime: javascript
+timeout: 30s

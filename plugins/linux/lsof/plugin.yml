@@ -1,0 +1,17 @@
+name: linux_lsof
+version: "1.0"
+description: 查看打开的文件或端口（lsof）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  args:
+    type: string
+    required: false
+    description: 传给 lsof 的额外参数，默认 -i
+runtime: javascript
+timeout: 15s

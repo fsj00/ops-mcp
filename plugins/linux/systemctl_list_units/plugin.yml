@@ -1,0 +1,25 @@
+name: linux_systemctl_list_units
+version: "1.0"
+description: 列出 systemd 单元（systemctl list-units）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  type:
+    type: string
+    required: false
+    description: 单元类型过滤（--type），如 service
+  state:
+    type: string
+    required: false
+    description: 状态过滤（--state），如 running / failed
+  all:
+    type: boolean
+    required: false
+    description: 是否包含非活跃单元（--all）
+runtime: javascript
+timeout: 15s

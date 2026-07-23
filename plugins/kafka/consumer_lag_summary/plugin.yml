@@ -1,0 +1,23 @@
+name: kafka_consumer_lag_summary
+version: "1.0"
+description: Consumer group lag 汇总（按 group）
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  group:
+    type: string
+    required: false
+    description: 可选，仅汇总指定 group；省略则汇总全部（受 limit 约束）
+  limit:
+    type: number
+    required: false
+    description: 最大 group 数（受 kafka.yaml limit 上限约束）
+runtime: javascript
+timeout: 30s

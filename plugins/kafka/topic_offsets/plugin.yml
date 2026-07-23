@@ -1,0 +1,19 @@
+name: kafka_topic_offsets
+version: "1.0"
+description: Topic 各分区 earliest/latest offset 与消息量估算
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  topic:
+    type: string
+    required: true
+    description: topic 名称
+runtime: javascript
+timeout: 30s

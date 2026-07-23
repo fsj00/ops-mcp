@@ -1,0 +1,13 @@
+name: snmp_sysinfo
+version: "1.0"
+description: 读取交换机系统信息（SNMPv2-MIB system 组）
+type: query
+target:
+  type: snmp
+input:
+  device:
+    type: string
+    required: true
+    description: snmp.yaml 中的设备 name
+runtime: javascript
+timeout: 30s

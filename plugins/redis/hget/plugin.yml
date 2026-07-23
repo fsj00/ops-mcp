@@ -1,0 +1,30 @@
+name: redis_hget
+version: "1.0"
+description: Redis HGET（读取 hash 字段；字段不存在时 value 为 null；非 hash 类型会报错）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: Hash key
+
+  field:
+    type: string
+    required: true
+    description: Hash field
+runtime: javascript
+timeout: 30s

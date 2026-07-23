@@ -1,0 +1,23 @@
+name: kafka_broker_config
+version: "1.0"
+description: 查询 broker / 集群级配置（敏感值脱敏）
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  broker_id:
+    type: number
+    required: false
+    description: broker id；省略则返回集群级/任意 broker 可答的动态配置
+  prefix:
+    type: string
+    required: false
+    description: 仅返回以此前缀开头的配置项
+runtime: javascript
+timeout: 30s

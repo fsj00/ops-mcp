@@ -1,0 +1,13 @@
+name: linux_lsblk
+version: "1.0"
+description: 列出块设备（lsblk）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

@@ -1,0 +1,21 @@
+name: redis_dbsize
+version: "1.0"
+description: Redis DBSIZE（当前库 key 数量）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+runtime: javascript
+timeout: 30s

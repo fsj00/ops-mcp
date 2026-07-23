@@ -1,0 +1,13 @@
+name: linux_uptime
+version: "1.0"
+description: 查看系统运行时间与负载（uptime）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

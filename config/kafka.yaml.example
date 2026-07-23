@@ -1,0 +1,23 @@
+kafka:
+  - name: local-kafka
+    description: local kafka (dev)
+    labels:
+      env: dev
+    connection:
+      brokers:
+        - 127.0.0.1:9092
+      # 可选 SASL：plain | scram-sha-256 | scram-sha-512
+      # sasl:
+      #   mechanism: plain
+      #   username: readonly
+      #   password: "CHANGE_ME"
+      # 可选 TLS / mTLS（字段约定同 redis.yaml）
+      # tls:
+      #   enabled: true
+      #   server_name: kafka.example.com
+      #   ca_file: /etc/ops-mcp/certs/ca.crt
+      #   cert_file: /etc/ops-mcp/certs/client.crt
+      #   private_key_file: /etc/ops-mcp/certs/client.key
+    readonly: true
+    # topics / consumer_groups / lag_summary 等列表上限，缺省 1000
+    limit: 1000

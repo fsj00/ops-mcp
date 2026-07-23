@@ -1,0 +1,17 @@
+name: linux_ls
+version: "1.0"
+description: Linux目录列表（ls -al）
+type: command
+target:
+  type: ssh
+input:
+  path:
+    type: string
+    required: true
+    description: 要列出的目录路径
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

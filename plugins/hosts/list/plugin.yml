@@ -1,0 +1,9 @@
+name: list_hosts
+version: "1.0"
+description: 列出当前可用的 SSH 主机（来自 hosts.yaml），返回 name、description、labels、address 等元数据，不含密码/私钥
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

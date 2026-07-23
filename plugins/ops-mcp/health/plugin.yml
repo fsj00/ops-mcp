@@ -1,0 +1,13 @@
+name: ops_mcp_health
+version: "1.0"
+description: 探测 ops-mcp 自身 GET /health（示例演示 ctx.http URL 直连模式；默认打本机 127.0.0.1:20267）
+type: query
+target:
+  type: http
+input:
+  base_url:
+    type: string
+    required: false
+    description: ops-mcp 根地址，缺省 http://127.0.0.1:20267
+runtime: javascript
+timeout: 5s

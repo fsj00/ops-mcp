@@ -1,0 +1,9 @@
+name: list_redis
+version: "1.0"
+description: 列出当前可用的 Redis 实例（来自 redis.yaml），返回 name、description、labels、connection 等元数据，不含密码
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

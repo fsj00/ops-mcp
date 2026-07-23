@@ -1,0 +1,17 @@
+name: docker_history
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker history，查看镜像层历史
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  image:
+    type: string
+    required: true
+    description: 镜像名或 ID
+runtime: javascript
+timeout: 15s

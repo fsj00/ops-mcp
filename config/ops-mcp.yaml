@@ -1,0 +1,26 @@
+server:
+  host: "0.0.0.0"
+  port: 20267
+  auth:
+    # Claude / Agent 须在请求头携带：Authorization: Bearer <token>
+    # 也可用环境变量 OPS_MCP_AUTH_TOKEN 覆盖（勿把生产密钥提交到 git）
+    token: "ops-mcp-local-dev-token"
+
+plugins:
+  dir: "./plugins"
+
+config:
+  hosts: "./config/hosts.yaml"
+  databases: "./config/databases.yaml"
+  redis: "./config/redis.yaml"
+  kafka: "./config/kafka.yaml"
+  apis: "./config/apis.yaml"
+  commands: "./config/commands.yaml"
+  snmp: "./config/snmp.yaml"
+
+defaults:
+  plugin_timeout: 30s
+
+log:
+  level: debug
+  encoding: console

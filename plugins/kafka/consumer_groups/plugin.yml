@@ -1,0 +1,19 @@
+name: kafka_consumer_groups
+version: "1.0"
+description: 列出 Kafka consumer groups
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  limit:
+    type: number
+    required: false
+    description: 最大返回条数（受 kafka.yaml limit 上限约束）
+runtime: javascript
+timeout: 30s

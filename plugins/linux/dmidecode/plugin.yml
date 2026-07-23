@@ -1,0 +1,17 @@
+name: linux_dmidecode
+version: "1.0"
+description: 查看硬件 DMI/SMBIOS 信息（dmidecode，通常需要 root）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  type:
+    type: string
+    required: false
+    description: DMI 类型（-t），如 system / memory / processor / bios
+runtime: javascript
+timeout: 15s

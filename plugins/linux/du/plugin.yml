@@ -1,0 +1,21 @@
+name: linux_du
+version: "1.0"
+description: 查看目录磁盘占用（du -h）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  path:
+    type: string
+    required: true
+    description: 目录或文件路径
+  max_depth:
+    type: string
+    required: false
+    description: 最大深度（--max-depth），默认 1
+runtime: javascript
+timeout: 30s

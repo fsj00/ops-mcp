@@ -1,0 +1,25 @@
+name: redis_info
+version: "1.0"
+description: Redis INFO（可选 section，避免全量过大）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  section:
+    type: string
+    required: false
+    description: INFO section，如 server / memory / stats；省略则返回全部
+runtime: javascript
+timeout: 30s

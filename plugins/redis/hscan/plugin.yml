@@ -1,0 +1,40 @@
+name: redis_hscan
+version: "1.0"
+description: Redis HSCAN 游标扫描 hash 字段（必须提供 limit，默认上限 1000）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: Hash key
+
+  cursor:
+    type: number
+    required: false
+    description: HSCAN 游标，默认 0
+
+  match:
+    type: string
+    required: false
+    description: MATCH 模式，默认 *
+
+  limit:
+    type: number
+    required: true
+    description: 本次最多返回的 field-value 对数（必填，且不超过 redis.yaml limit，缺省上限 1000）
+runtime: javascript
+timeout: 30s

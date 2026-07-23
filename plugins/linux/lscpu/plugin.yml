@@ -1,0 +1,13 @@
+name: linux_lscpu
+version: "1.0"
+description: 查看 CPU 架构信息（lscpu）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

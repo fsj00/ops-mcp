@@ -1,0 +1,24 @@
+server:
+  host: "0.0.0.0"
+  port: 20267
+  auth:
+    token: "CHANGE_ME"
+
+plugins:
+  dir: "./plugins"
+
+config:
+  hosts: "./config/hosts.yaml"
+  databases: "./config/databases.yaml"
+  redis: "./config/redis.yaml"
+  kafka: "./config/kafka.yaml"
+  apis: "./config/apis.yaml"
+  commands: "./config/commands.yaml"
+  snmp: "./config/snmp.yaml"
+
+defaults:
+  plugin_timeout: 30s
+
+log:
+  level: info
+  encoding: json

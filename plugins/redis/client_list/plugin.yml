@@ -1,0 +1,25 @@
+name: redis_client_list
+version: "1.0"
+description: Redis CLIENT LIST（必须提供 limit，截断返回）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  limit:
+    type: number
+    required: true
+    description: 最多返回客户端行数（必填，且不超过 redis.yaml limit，缺省上限 1000）
+runtime: javascript
+timeout: 30s

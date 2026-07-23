@@ -1,0 +1,21 @@
+name: list_snmp_devices
+version: "1.0"
+description: 列出 snmp.yaml 中的 SNMP 设备摘要（支持 labels 过滤与分页，不含密钥）
+type: query
+target:
+  type: config
+input:
+  labels:
+    type: object
+    required: false
+    description: 标签精确匹配过滤，如 {"site":"dc1","role":"core"}
+  limit:
+    type: number
+    required: false
+    description: 返回条数上限，缺省 100
+  offset:
+    type: number
+    required: false
+    description: 分页偏移，缺省 0
+runtime: javascript
+timeout: 5s

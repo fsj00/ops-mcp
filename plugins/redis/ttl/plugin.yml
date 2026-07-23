@@ -1,0 +1,25 @@
+name: redis_ttl
+version: "1.0"
+description: Redis TTL（查看 key 剩余生存时间，秒）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: Redis key
+runtime: javascript
+timeout: 30s

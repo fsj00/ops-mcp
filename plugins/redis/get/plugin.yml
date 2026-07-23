@@ -1,0 +1,25 @@
+name: redis_get
+version: "1.0"
+description: Redis GET（读取 string key 的值；不存在时 value 为 null；非 string 类型会报错）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: Redis key（须为 string 类型）
+runtime: javascript
+timeout: 30s

@@ -1,0 +1,37 @@
+name: linux_journalctl
+version: "1.0"
+description: 查看 systemd 日志（journalctl --no-pager）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  unit:
+    type: string
+    required: false
+    description: 服务/单元名（-u）
+  lines:
+    type: string
+    required: false
+    description: 尾部行数（-n），默认 100
+  since:
+    type: string
+    required: false
+    description: 起始时间（--since），如 "1 hour ago"
+  boot:
+    type: boolean
+    required: false
+    description: 仅当前启动（-b）
+  priority:
+    type: string
+    required: false
+    description: 优先级过滤（-p），如 err
+  grep:
+    type: string
+    required: false
+    description: 消息过滤（-g）
+runtime: javascript
+timeout: 20s

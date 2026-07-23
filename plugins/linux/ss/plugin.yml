@@ -1,0 +1,17 @@
+name: linux_ss
+version: "1.0"
+description: 查看套接字统计（ss）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  args:
+    type: string
+    required: false
+    description: 传给 ss 的参数，默认 -tunlp
+runtime: javascript
+timeout: 10s

@@ -1,0 +1,19 @@
+name: kafka_partition_health
+version: "1.0"
+description: Kafka 分区健康（under-replicated / offline / no leader）
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  topic:
+    type: string
+    required: false
+    description: 可选，仅检查指定 topic；省略则检查全部
+runtime: javascript
+timeout: 30s

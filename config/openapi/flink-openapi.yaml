@@ -1,0 +1,305 @@
+openapi: 3.0.3
+info:
+  title: Flink ReadOnly REST API
+  description: |
+    Read-only Apache Flink REST API.
+
+    Designed for:
+    - AI Agent
+    - MCP integration
+    - Operations troubleshooting
+
+    Supports:
+    - Job monitoring
+    - Exception analysis
+    - Checkpoint diagnosis
+    - TaskManager health
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+tags:
+  - name: Cluster
+    description: Cluster information
+  - name: Jobs
+    description: Flink jobs
+  - name: TaskManagers
+    description: TaskManager information
+x-mcp:
+  readonly: true
+  category: stream-processing
+  risk: low
+paths:
+  /overview:
+    get:
+      tags:
+        - Cluster
+      summary: Get Flink cluster overview
+      operationId: flink_get_overview
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Cluster overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkOverviewResponse'
+  /jobs:
+    get:
+      tags:
+        - Jobs
+      summary: List Flink jobs
+      operationId: flink_list_jobs
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Job list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkJobsResponse'
+  /jobs/{jobid}:
+    get:
+      tags:
+        - Jobs
+      summary: Get job detail
+      operationId: flink_get_job
+      parameters:
+        - name: jobid
+          in: path
+          required: true
+          description: Flink Job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkJobDetailResponse'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /jobs/{jobid}/exceptions:
+    get:
+      tags:
+        - Jobs
+      summary: Get job exceptions
+      operationId: flink_get_job_exceptions
+      parameters:
+        - name: jobid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Exception information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkExceptionResponse'
+  /jobs/{jobid}/checkpoints:
+    get:
+      tags:
+        - Jobs
+      summary: Get checkpoint statistics
+      operationId: flink_get_job_checkpoints
+      parameters:
+        - name: jobid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Checkpoint information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkCheckpointResponse'
+  /jobs/{jobid}/checkpoints/details/{checkpointid}:
+    get:
+      tags:
+        - Jobs
+      summary: Get checkpoint detail
+      operationId: flink_get_job_checkpoint_details
+      parameters:
+        - name: jobid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checkpointid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Checkpoint detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkCheckpointDetailResponse'
+  /jobs/{jobid}/metrics:
+    get:
+      tags:
+        - Jobs
+      summary: Get job metrics
+      operationId: flink_get_job_metrics
+      parameters:
+        - name: jobid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: get
+          in: query
+          description: Metric names
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlinkMetric'
+  /taskmanagers:
+    get:
+      tags:
+        - TaskManagers
+      summary: List TaskManagers
+      operationId: flink_list_taskmanagers
+      responses:
+        '200':
+          description: TaskManagers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkTaskManagersResponse'
+  /taskmanagers/{taskmanagerid}:
+    get:
+      tags:
+        - TaskManagers
+      summary: Get TaskManager detail
+      operationId: flink_get_taskmanager
+      parameters:
+        - name: taskmanagerid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: TaskManager detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlinkTaskManagerDetailResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+    FlinkOverviewResponse:
+      type: object
+      properties:
+        taskmanagers:
+          type: integer
+        slots-total:
+          type: integer
+        slots-available:
+          type: integer
+        jobs-running:
+          type: integer
+        jobs-finished:
+          type: integer
+        jobs-cancelled:
+          type: integer
+        jobs-failed:
+          type: integer
+    FlinkJobsResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlinkJob'
+    FlinkJob:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a1b2c3
+        status:
+          type: string
+          example: RUNNING
+    FlinkJobDetailResponse:
+      type: object
+      additionalProperties: true
+    FlinkExceptionResponse:
+      type: object
+      properties:
+        root-exception:
+          type: string
+        timestamp:
+          type: integer
+        all-exceptions:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    FlinkCheckpointResponse:
+      type: object
+      properties:
+        counts:
+          type: object
+          additionalProperties:
+            type: integer
+        latest:
+          type: object
+          additionalProperties: true
+    FlinkCheckpointDetailResponse:
+      type: object
+      additionalProperties: true
+    FlinkMetric:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+    FlinkTaskManagersResponse:
+      type: object
+      properties:
+        taskmanagers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlinkTaskManager'
+    FlinkTaskManager:
+      type: object
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        dataPort:
+          type: integer
+        slotsNumber:
+          type: integer
+    FlinkTaskManagerDetailResponse:
+      type: object
+      additionalProperties: true

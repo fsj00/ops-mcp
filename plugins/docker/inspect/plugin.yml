@@ -1,0 +1,17 @@
+name: docker_inspect
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker inspect，查看容器或镜像详情
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  target:
+    type: string
+    required: true
+    description: 容器或镜像的名称 / ID
+runtime: javascript
+timeout: 15s

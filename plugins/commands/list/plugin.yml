@@ -1,0 +1,9 @@
+name: list_commands
+version: "1.0"
+description: 列出当前可用的本机命令白名单（来自 commands.yaml），返回 name、description、path
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

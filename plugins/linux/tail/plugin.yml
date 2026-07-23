@@ -1,0 +1,21 @@
+name: linux_tail
+version: "1.0"
+description: 读取远程文件尾部
+type: command
+target:
+  type: ssh
+input:
+  path:
+    type: string
+    required: true
+    description: 文件路径
+  lines:
+    type: string
+    required: false
+    description: 行数，默认 50
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

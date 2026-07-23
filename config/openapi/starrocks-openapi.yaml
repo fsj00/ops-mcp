@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: StarRocks ReadOnly API
+  description: |
+    Read-only StarRocks HTTP API.
+
+    Designed for:
+    - AI Agent
+    - MCP integration
+    - OLAP troubleshooting
+
+    Only query and monitoring APIs are exposed.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8030
+tags:
+  - name: Cluster
+    description: Cluster status and topology
+  - name: Query
+    description: Query monitoring
+  - name: Metrics
+    description: Metrics
+x-mcp:
+  readonly: true
+  category: olap
+  risk: low
+paths:
+  /api/health:
+    get:
+      tags:
+        - Cluster
+      summary: Check StarRocks FE health
+      operationId: starrocks_health
+      x-mcp:
+        readonly: true
+        timeout: 5s
+      responses:
+        '200':
+          description: Cluster health
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StarRocksHealthResponse'
+        '503':
+          description: Cluster unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get StarRocks metrics
+      operationId: starrocks_get_metrics
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+  /api/show_proc:
+    get:
+      tags:
+        - Cluster
+      summary: Get StarRocks proc information
+      operationId: starrocks_show_proc
+      x-mcp:
+        readonly: true
+      parameters:
+        - name: path
+          in: query
+          required: true
+          description: |
+            Proc path.
+
+            Examples:
+            /backends
+            /frontends
+          schema:
+            type: string
+          example: /backends
+      responses:
+        '200':
+          description: Proc information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StarRocksProcResponse'
+  /api/query_detail:
+    get:
+      tags:
+        - Query
+      summary: Get running query details
+      operationId: starrocks_get_query_detail
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Query details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StarRocksQueryDetailResponse'
+  /api/connection:
+    get:
+      tags:
+        - Query
+      summary: Get current connections
+      operationId: starrocks_get_connections
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Connection information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StarRocksConnectionResponse'
+  /api/show_runtime_info:
+    get:
+      tags:
+        - Cluster
+      summary: Get runtime information
+      operationId: starrocks_get_runtime_info
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Runtime information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StarRocksRuntimeResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: STARROCKS_ERROR
+        message:
+          type: string
+        requestId:
+          type: string
+    StarRocksHealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+    StarRocksProcResponse:
+      type: object
+      description: |
+        Dynamic StarRocks proc result.
+
+        Structure depends on proc path.
+      additionalProperties: true
+    StarRocksQueryDetailResponse:
+      type: object
+      description: |
+        Running query information.
+
+        Fields may vary by StarRocks version.
+      additionalProperties: true
+    StarRocksConnectionResponse:
+      type: object
+      description: |
+        Current FE connections.
+      additionalProperties: true
+    StarRocksRuntimeResponse:
+      type: object
+      description: |
+        FE runtime information.
+      additionalProperties: true

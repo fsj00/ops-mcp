@@ -1,0 +1,23 @@
+name: kafka_consumer_lag
+version: "1.0"
+description: 查询指定 consumer group 的分区 lag
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+  group:
+    type: string
+    required: true
+    description: consumer group 名称
+  topic:
+    type: string
+    required: false
+    description: 可选，仅返回指定 topic 的 lag
+runtime: javascript
+timeout: 30s

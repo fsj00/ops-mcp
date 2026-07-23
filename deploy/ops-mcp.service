@@ -1,0 +1,26 @@
+[Unit]
+Description=ops-mcp Remote MCP Ops Server
+Documentation=https://github.com/fsj00/ops-mcp
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__OPS_MCP_USER__
+Group=__OPS_MCP_GROUP__
+WorkingDirectory=__INSTALL_DIR__
+ExecStart=__INSTALL_DIR__/bin/ops-mcp --config __INSTALL_DIR__/config/ops-mcp.yaml
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65535
+
+# 可用环境变量覆盖鉴权 token（勿把生产密钥写入 unit 文件）
+# Environment=OPS_MCP_AUTH_TOKEN=
+
+# 日志走 journald：journalctl -u ops-mcp -f
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ops-mcp
+
+[Install]
+WantedBy=multi-user.target

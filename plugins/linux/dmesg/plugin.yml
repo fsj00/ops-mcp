@@ -1,0 +1,25 @@
+name: linux_dmesg
+version: "1.0"
+description: 查看内核环形缓冲区日志（dmesg）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  lines:
+    type: string
+    required: false
+    description: 仅输出尾部行数；省略则输出全部（可能较长）
+  level:
+    type: string
+    required: false
+    description: 日志级别过滤（--level），如 err,warn
+  human:
+    type: boolean
+    required: false
+    description: 是否人类可读时间（-T），默认 true
+runtime: javascript
+timeout: 15s

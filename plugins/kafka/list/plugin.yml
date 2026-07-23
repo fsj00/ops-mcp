@@ -1,0 +1,9 @@
+name: list_kafka
+version: "1.0"
+description: 列出当前可用的 Kafka 集群（来自 kafka.yaml），返回 name、description、labels、connection 等元数据，不含密码
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

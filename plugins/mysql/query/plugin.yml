@@ -1,0 +1,20 @@
+name: mysql_query
+version: "1.0"
+description: 在指定 MySQL 库上执行只读 SELECT（经语义校验，自动附加 LIMIT）
+type: query
+
+target:
+  type: mysql
+
+input:
+  database:
+    type: string
+    required: true
+    description: databases.yaml 中的数据库 name
+  sql:
+    type: string
+    required: true
+    description: SELECT 语句（非 SELECT 会被拒绝）
+
+runtime: javascript
+timeout: 30s

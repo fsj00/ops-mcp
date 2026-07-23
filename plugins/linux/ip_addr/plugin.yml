@@ -1,0 +1,17 @@
+name: linux_ip_addr
+version: "1.0"
+description: 查看网络接口地址（ip addr）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  iface:
+    type: string
+    required: false
+    description: 网卡名，如 eth0；省略则全部
+runtime: javascript
+timeout: 10s

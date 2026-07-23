@@ -1,0 +1,13 @@
+name: linux_free
+version: "1.0"
+description: 查看远程主机内存使用
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

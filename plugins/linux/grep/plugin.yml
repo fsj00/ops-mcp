@@ -1,0 +1,21 @@
+name: linux_grep
+version: "1.0"
+description: 在远程文件中检索文本
+type: command
+target:
+  type: ssh
+input:
+  pattern:
+    type: string
+    required: true
+    description: 检索模式
+  path:
+    type: string
+    required: true
+    description: 文件或目录路径
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 15s

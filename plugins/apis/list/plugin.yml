@@ -1,0 +1,9 @@
+name: list_apis
+version: "1.0"
+description: 列出当前可用的 HTTP API 服务（来自 apis.yaml），返回 name、description、labels、base_url、prefix、tool_count 等元数据，不含 headers 原文
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

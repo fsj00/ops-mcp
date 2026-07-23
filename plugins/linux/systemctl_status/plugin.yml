@@ -1,0 +1,17 @@
+name: linux_systemctl_status
+version: "1.0"
+description: 查询 systemd 服务状态
+type: command
+target:
+  type: ssh
+input:
+  service:
+    type: string
+    required: true
+    description: 服务名
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

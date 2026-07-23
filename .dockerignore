@@ -1,0 +1,15 @@
+.git
+.cursor
+.tmp
+bin
+test-mcp
+*.md
+!README.md
+.env
+**/*.pem
+**/*.key
+**/id_rsa
+**/id_ed25519
+config/hosts.yaml
+config/databases.yaml
+agent-transcripts

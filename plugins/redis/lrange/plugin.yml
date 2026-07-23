@@ -1,0 +1,35 @@
+name: redis_lrange
+version: "1.0"
+description: Redis LRANGE（从 start 起最多返回 limit 个元素；必须提供 limit，禁止全量导出）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  key:
+    type: string
+    required: true
+    description: List key
+
+  start:
+    type: number
+    required: false
+    description: 起始下标（含），缺省 0；可为负数
+
+  limit:
+    type: number
+    required: true
+    description: 最多返回元素数（必填，且不超过 redis.yaml limit，缺省上限 1000）
+runtime: javascript
+timeout: 30s

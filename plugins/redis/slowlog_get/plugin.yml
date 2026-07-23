@@ -1,0 +1,25 @@
+name: redis_slowlog_get
+version: "1.0"
+description: Redis SLOWLOG GET（必须提供 count，上限受 redis.yaml limit 约束）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  count:
+    type: number
+    required: true
+    description: 返回条数（必填，且不超过 redis.yaml limit，缺省上限 1000）
+runtime: javascript
+timeout: 30s

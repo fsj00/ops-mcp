@@ -1,0 +1,17 @@
+name: linux_top
+version: "1.0"
+description: 查看占用 CPU 最高的进程（默认 top 10）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  count:
+    type: string
+    required: false
+    description: 返回进程数量，默认 10
+runtime: javascript
+timeout: 10s

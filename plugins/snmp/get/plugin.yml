@@ -1,0 +1,17 @@
+name: snmp_get
+version: "1.0"
+description: 对指定 SNMP 设备执行 GET（OIDs 数组）
+type: query
+target:
+  type: snmp
+input:
+  device:
+    type: string
+    required: true
+    description: snmp.yaml 中的设备 name
+  oids:
+    type: array
+    required: true
+    description: 要查询的 OID 字符串数组（单次最多 64 个）
+runtime: javascript
+timeout: 30s

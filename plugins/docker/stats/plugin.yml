@@ -1,0 +1,17 @@
+name: docker_stats
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker stats --no-stream，查看容器资源占用
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  container:
+    type: string
+    required: false
+    description: 容器名或 ID；省略则统计全部运行中容器
+runtime: javascript
+timeout: 20s

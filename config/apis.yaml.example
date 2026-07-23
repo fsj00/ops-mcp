@@ -1,0 +1,98 @@
+# 复制为 config/apis.yaml 后按需修改。
+# 含真实 Token 的 apis.yaml 勿提交（已在 .gitignore）。
+# 完整契约见 docs/apis.md。
+# 仓库附带只读 OpenAPI：config/openapi/{prometheus,loki,flink,starrocks}-openapi.yaml
+
+apis:
+  - name: prometheus
+    description: Prometheus API Service
+    openapi:
+      path: ./config/openapi/prometheus-openapi.yaml
+    endpoint:
+      base_url: http://prometheus:9090
+      timeout: 30s
+      verify_tls: false
+    prefix:
+    labels:
+      env: production
+      system: monitor
+    headers: {}
+    discovery:
+      # Include：Query 类 + Labels 元数据
+      include:
+        - operation_ids:
+            - "^prometheus_query_instant$"
+            - "^prometheus_query_range$"
+            - "^prometheus_labels$"
+            - "^prometheus_label_values$"
+            - "^prometheus_series$"
+
+  - name: loki
+    description: Loki API Service (LogQL)
+    openapi:
+      path: ./config/openapi/loki-openapi.yaml
+    endpoint:
+      base_url: http://loki:3100
+      timeout: 30s
+      verify_tls: false
+    prefix:
+    labels:
+      env: production
+      system: logging
+    headers: {}
+    discovery:
+      # Include：LogQL 查询 + Labels / Series 元数据
+      include:
+        - operation_ids:
+            - "^loki_query_instant$"
+            - "^loki_query_range$"
+            - "^loki_get_labels$"
+            - "^loki_get_label_values$"
+            - "^loki_get_series$"
+            - "^loki_get_build_info$"
+
+  - name: flink
+    description: Apache Flink REST API (read-only)
+    openapi:
+      path: ./config/openapi/flink-openapi.yaml
+    endpoint:
+      base_url: http://flink-jobmanager:8081
+      timeout: 15s
+      verify_tls: false
+    prefix:
+    labels:
+      env: production
+      system: stream
+    headers: {}
+    discovery:
+      # Include：集群概览 + Job / Checkpoint / TaskManager
+      include:
+        - operation_ids:
+            - "^flink_get_overview$"
+            - "^flink_list_jobs$"
+            - "^flink_get_job$"
+            - "^flink_get_job_exceptions$"
+            - "^flink_get_job_checkpoints$"
+            - "^flink_get_job_checkpoint_details$"
+            - "^flink_get_job_metrics$"
+            - "^flink_list_taskmanagers$"
+            - "^flink_get_taskmanager$"
+
+  # - name: billing
+  #   description: Billing API (read-only discovery)
+  #   openapi:
+  #     path: ./openapi/billing.yaml
+  #   endpoint:
+  #     base_url: https://billing.example.com
+  #     timeout: 15s
+  #     verify_tls: true
+  #   prefix: billing_
+  #   labels:
+  #     env: production
+  #     system: billing
+  #   headers:
+  #     X-Api-Key: "${BILLING_API_KEY}"
+  #   discovery:
+  #     include: []   # 全部候选
+  #     exclude:
+  #       - methods: [POST, PUT, PATCH, DELETE]

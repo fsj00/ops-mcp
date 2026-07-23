@@ -1,0 +1,310 @@
+openapi: 3.0.3
+info:
+  title: Loki ReadOnly API
+  description: |
+    Read-only Loki HTTP API.
+
+    Designed for:
+    - AI Agent
+    - MCP integration
+    - Operations troubleshooting
+
+    This API only supports query operations.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3100
+tags:
+  - name: Query
+    description: LogQL query operations
+  - name: Metadata
+    description: Loki metadata operations
+x-mcp:
+  readonly: true
+  category: logging
+  risk: low
+paths:
+  /loki/api/v1/query:
+    get:
+      tags:
+        - Query
+      summary: Execute instant LogQL query
+      description: |
+        Execute an instant LogQL query.
+
+        Example:
+
+        {app="cm"} |= "error"
+      operationId: loki_query_instant
+      x-mcp:
+        readonly: true
+        timeout: 30s
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: LogQL expression
+          schema:
+            type: string
+          example: '{app="cm"} |= "error"'
+        - name: limit
+          in: query
+          description: Maximum returned entries
+          schema:
+            type: integer
+            default: 100
+        - name: time
+          in: query
+          description: Evaluation timestamp
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiQueryResponse'
+        '400':
+          description: Invalid LogQL query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Loki server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /loki/api/v1/query_range:
+    get:
+      tags:
+        - Query
+      summary: Execute range LogQL query
+      operationId: loki_query_range
+      x-mcp:
+        readonly: true
+        timeout: 60s
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: start
+          in: query
+          required: true
+          description: Start timestamp
+          schema:
+            type: string
+        - name: end
+          in: query
+          required: true
+          description: End timestamp
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 1000
+        - name: direction
+          in: query
+          schema:
+            type: string
+            enum:
+              - forward
+              - backward
+            default: backward
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiQueryResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /loki/api/v1/labels:
+    get:
+      tags:
+        - Metadata
+      summary: Get available labels
+      operationId: loki_get_labels
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiLabelsResponse'
+  /loki/api/v1/label/{label_name}/values:
+    get:
+      tags:
+        - Metadata
+      summary: Get label values
+      operationId: loki_get_label_values
+      x-mcp:
+        readonly: true
+      parameters:
+        - name: label_name
+          in: path
+          required: true
+          description: Label name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Label values
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiLabelsResponse'
+        '404':
+          description: Label not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /loki/api/v1/series:
+    get:
+      tags:
+        - Metadata
+      summary: Find log streams
+      operationId: loki_get_series
+      x-mcp:
+        readonly: true
+      parameters:
+        - name: match[]
+          in: query
+          required: true
+          description: Stream selector
+          schema:
+            type: array
+            items:
+              type: string
+        - name: start
+          in: query
+          schema:
+            type: string
+        - name: end
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Series list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiSeriesResponse'
+  /loki/api/v1/status/buildinfo:
+    get:
+      tags:
+        - Metadata
+      summary: Get Loki build information
+      operationId: loki_get_build_info
+      x-mcp:
+        readonly: true
+      responses:
+        '200':
+          description: Loki build information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiBuildInfoResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        errorType:
+          type: string
+        error:
+          type: string
+    LokiQueryResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          $ref: '#/components/schemas/LokiQueryData'
+        errorType:
+          type: string
+        error:
+          type: string
+    LokiQueryData:
+      type: object
+      properties:
+        resultType:
+          type: string
+          example: streams
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/LokiStreamResult'
+    LokiStreamResult:
+      type: object
+      properties:
+        stream:
+          type: object
+          additionalProperties:
+            type: string
+        values:
+          type: array
+          description: |
+            Array of:
+            [
+              timestamp,
+              log line
+            ]
+          items:
+            type: array
+            items:
+              type: string
+    LokiLabelsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            type: string
+    LokiSeriesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+    LokiBuildInfoResponse:
+      type: object
+      properties:
+        version:
+          type: string
+          example: 3.0.0
+        revision:
+          type: string
+        branch:
+          type: string
+        buildUser:
+          type: string
+        buildDate:
+          type: string

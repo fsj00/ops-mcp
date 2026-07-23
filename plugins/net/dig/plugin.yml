@@ -1,0 +1,21 @@
+name: host_dig
+version: "1.0"
+description: 在本机执行 dig DNS 查询；须在 commands.yaml 登记 name=dig
+type: command
+target:
+  type: command
+input:
+  name:
+    type: string
+    required: true
+    description: 要查询的域名
+  type:
+    type: string
+    required: false
+    description: 记录类型，如 A / AAAA / MX，默认 A
+  server:
+    type: string
+    required: false
+    description: 指定 DNS 服务器（@server）
+runtime: javascript
+timeout: 15s

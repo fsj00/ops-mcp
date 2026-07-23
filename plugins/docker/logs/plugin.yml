@@ -1,0 +1,29 @@
+name: docker_logs
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker logs，读取容器日志
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  container:
+    type: string
+    required: true
+    description: 容器名或 ID
+  tail:
+    type: string
+    required: false
+    description: 尾部行数，默认 100
+  since:
+    type: string
+    required: false
+    description: 时间过滤
+  timestamps:
+    type: boolean
+    required: false
+    description: 是否带时间戳
+runtime: javascript
+timeout: 20s

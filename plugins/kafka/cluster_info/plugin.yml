@@ -1,0 +1,15 @@
+name: kafka_cluster_info
+version: "1.0"
+description: Kafka 集群信息（cluster id、controller、broker 列表）
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+runtime: javascript
+timeout: 30s

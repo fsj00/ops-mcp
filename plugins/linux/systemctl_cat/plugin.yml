@@ -1,0 +1,17 @@
+name: linux_systemctl_cat
+version: "1.0"
+description: 查看 systemd 单元文件内容（systemctl cat）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  unit:
+    type: string
+    required: true
+    description: 单元名，如 nginx.service
+runtime: javascript
+timeout: 10s

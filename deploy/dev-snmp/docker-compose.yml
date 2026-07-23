@@ -1,0 +1,32 @@
+# 本地开发用 SNMP Agent 模拟器（snmpsim）
+# 用法：make snmp-up  或  docker compose -f deploy/dev-snmp/docker-compose.yml up -d
+#
+# 宿主机：UDP 1161（避免占用特权端口 161）
+# 容器内：UDP 161
+# community：与 data/*.snmprec 文件名一致（此处为 public）
+
+services:
+  snmpsim:
+    image: ghcr.io/lextudio/docker-snmpsim:master
+    container_name: ops-mcp-snmpsim
+    restart: unless-stopped
+    ports:
+      - "1161:161/udp"
+    volumes:
+      - ./data:/usr/local/snmpsim/data:ro
+    environment:
+      # 关闭 trap 监听，开发只需要 Agent
+      SNMPTRAPD_ENABLED: "0"
+      # 额外启用 SNMPv3（供 ops-mcp snmp.yaml 联调）
+      EXTRA_FLAGS: >-
+        --v3-user=readonly
+        --v3-auth-key=authpass123
+        --v3-priv-key=privpass123
+        --v3-auth-proto=SHA
+        --v3-priv-proto=AES
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import socket; s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.settimeout(2); s.sendto(b'',('127.0.0.1',161)); s.close()\""]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s

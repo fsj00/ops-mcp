@@ -1,0 +1,17 @@
+name: snmp_interfaces
+version: "1.0"
+description: 读取接口表子集（ifDescr/ifType/ifAdminStatus/ifOperStatus/ifSpeed/ifAlias）
+type: query
+target:
+  type: snmp
+input:
+  device:
+    type: string
+    required: true
+    description: snmp.yaml 中的设备 name
+  max_oids:
+    type: number
+    required: false
+    description: walk 截断上限（缺省用设备 walk_max_oids）
+runtime: javascript
+timeout: 90s

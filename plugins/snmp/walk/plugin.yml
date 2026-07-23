@@ -1,0 +1,21 @@
+name: snmp_walk
+version: "1.0"
+description: 对指定 SNMP 设备执行 WALK（受 walk_max_oids 截断）
+type: query
+target:
+  type: snmp
+input:
+  device:
+    type: string
+    required: true
+    description: snmp.yaml 中的设备 name
+  oid:
+    type: string
+    required: true
+    description: WALK 根 OID
+  max_oids:
+    type: number
+    required: false
+    description: 本次最多返回的 OID 数（不超过设备/默认 walk_max_oids）
+runtime: javascript
+timeout: 60s

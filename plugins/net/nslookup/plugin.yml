@@ -1,0 +1,17 @@
+name: host_nslookup
+version: "1.0"
+description: 在本机执行 nslookup DNS 查询；须在 commands.yaml 登记 name=nslookup
+type: command
+target:
+  type: command
+input:
+  name:
+    type: string
+    required: true
+    description: 要查询的域名或 IP
+  server:
+    type: string
+    required: false
+    description: 指定 DNS 服务器
+runtime: javascript
+timeout: 15s

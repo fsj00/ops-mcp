@@ -1,0 +1,222 @@
+openapi: 3.0.3
+info:
+  title: Prometheus HTTP API
+  description: |
+    Read-only Prometheus Query API.
+    Supports PromQL instant query and range query.
+    Designed for AI Agent / MCP integration.
+  version: 1.0.0
+servers:
+  - url: http://localhost:9090
+tags:
+  - name: Query
+    description: PromQL query APIs
+  - name: Metadata
+    description: Metric metadata APIs
+paths:
+  /api/v1/query:
+    get:
+      tags:
+        - Query
+      summary: Execute instant PromQL query
+      description: |
+        Execute PromQL expression at a single point in time.
+      operationId: prometheus_query_instant
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: PromQL expression
+          schema:
+            type: string
+          example: up
+        - name: time
+          in: query
+          required: false
+          description: Evaluation timestamp
+          schema:
+            type: string
+        - name: timeout
+          in: query
+          required: false
+          description: Query timeout
+          schema:
+            type: string
+            example: 30s
+        - name: limit
+          in: query
+          required: false
+          description: Maximum returned series
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        '400':
+          description: Bad request
+        '422':
+          description: Query execution error
+        '503':
+          description: Timeout
+  /api/v1/query_range:
+    get:
+      tags:
+        - Query
+      summary: Execute range PromQL query
+      operationId: prometheus_query_range
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: PromQL expression
+          schema:
+            type: string
+        - name: start
+          in: query
+          required: true
+          description: Start timestamp
+          schema:
+            type: string
+        - name: end
+          in: query
+          required: true
+          description: End timestamp
+          schema:
+            type: string
+        - name: step
+          in: query
+          required: true
+          description: Query resolution step
+          schema:
+            type: string
+            example: 15s
+        - name: timeout
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+  /api/v1/series:
+    get:
+      tags:
+        - Metadata
+      summary: Find time series
+      operationId: prometheus_series
+      parameters:
+        - name: match[]
+          in: query
+          required: true
+          description: Series selector
+          schema:
+            type: array
+            items:
+              type: string
+        - name: start
+          in: query
+          schema:
+            type: string
+        - name: end
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Series result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+  /api/v1/labels:
+    get:
+      tags:
+        - Metadata
+      summary: Get label names
+      operationId: prometheus_labels
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: string
+        - name: end
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Label list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+  /api/v1/label/{label_name}/values:
+    get:
+      tags:
+        - Metadata
+      summary: Get label values
+      operationId: prometheus_label_values
+      parameters:
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Label values
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+components:
+  schemas:
+    APIResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/QueryResult'
+            - type: array
+              items:
+                type: string
+        errorType:
+          type: string
+        error:
+          type: string
+    QueryResult:
+      type: object
+      properties:
+        resultType:
+          type: string
+          example: vector
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              metric:
+                type: object
+                additionalProperties:
+                  type: string
+              value:
+                type: array
+                items:
+                  oneOf:
+                    - type: number
+                    - type: string
+              values:
+                type: array
+                items:
+                  type: array

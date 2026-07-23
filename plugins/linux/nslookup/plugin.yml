@@ -1,0 +1,21 @@
+name: linux_nslookup
+version: "1.0"
+description: DNS 查询（nslookup）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  name:
+    type: string
+    required: true
+    description: 要查询的域名或 IP
+  server:
+    type: string
+    required: false
+    description: 指定 DNS 服务器
+runtime: javascript
+timeout: 15s

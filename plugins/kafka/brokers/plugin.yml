@@ -1,0 +1,15 @@
+name: kafka_brokers
+version: "1.0"
+description: 列出 Kafka brokers
+type: query
+
+target:
+  type: kafka
+
+input:
+  kafka:
+    type: string
+    required: true
+    description: kafka.yaml 中的实例 name
+runtime: javascript
+timeout: 30s

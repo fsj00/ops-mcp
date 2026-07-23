@@ -1,0 +1,37 @@
+hosts:
+  - name: dev-ssh-1
+    description: 开发测试 SSH 主机 192.168.0.1
+    labels:
+      env: dev
+    address:
+      host: 192.168.0.1
+      port: 22
+    auth:
+      type: password
+      username: root
+      password: "CHANGE_ME"
+
+  - name: dev-ssh-2
+    description: 开发测试 SSH 主机 192.168.0.2
+    labels:
+      env: dev
+    address:
+      host: 192.168.0.2
+      port: 22
+    auth:
+      type: password
+      username: root
+      password: "CHANGE_ME"
+
+  # private_key 示例（三选一）：
+  # auth:
+  #   type: private_key
+  #   username: ubuntu
+  #   private_key: |
+  #     -----BEGIN OPENSSH PRIVATE KEY-----
+  #     ***REPLACE_WITH_REAL_KEY***
+  #     -----END OPENSSH PRIVATE KEY-----
+  #   # 或使用文件路径：
+  #   # private_key_file: /etc/ops-mcp/keys/dev-ssh.pem
+  #   # 或文件内容的标准 base64：
+  #   # private_key: "LS0tLS1CRUdJTi..."

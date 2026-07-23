@@ -1,0 +1,67 @@
+# SNMP 设备与凭据清单（复制为 snmp.yaml 后按需改；勿提交 snmp.yaml）
+#
+# 双模式凭据（恰好二选一）：
+#   A) credential: <name>  — 引用下方 credentials[]（大规模共享推荐）
+#   B) auth: { ... }       — 设备内联（特例 / 快速接入）
+# 两者都填或都不填 → 加载失败。
+#
+# 本地 Docker 模拟器：make snmp-up（见 deploy/dev-snmp/README.md）
+#   127.0.0.1:1161  community=public  或  v3 readonly/authPriv
+
+credentials:
+  - name: local-ro-v2c
+    version: 2c
+    community: "public"
+
+  - name: local-ro-v3
+    version: 3
+    security_level: authPriv
+    username: readonly
+    auth_protocol: SHA
+    auth_password: "authpass123"
+    priv_protocol: AES
+    priv_password: "privpass123"
+
+  # 生产机房共享凭据示例（占位，勿提交真实值）
+  # - name: dc1-ro-v2c
+  #   version: 2c
+  #   community: "CHANGE_ME"
+
+devices:
+  # Docker snmpsim（推荐开发联调）
+  - name: local-snmp
+    description: local Docker snmpsim (v2c public @ UDP 1161)
+    labels:
+      env: dev
+      role: simulator
+    address:
+      host: 127.0.0.1
+      port: 1161
+    credential: local-ro-v2c
+
+  - name: local-snmp-v3
+    description: local Docker snmpsim (v3 authPriv @ UDP 1161)
+    labels:
+      env: dev
+      role: simulator
+    address:
+      host: 127.0.0.1
+      port: 1161
+    credential: local-ro-v3
+    # snmpsim 用 contextName 选择数据文件（与 community / 文件名一致）
+    context: public
+
+  # 模式 B：设备内联 auth 示例
+  # - name: sw-lab-01
+  #   description: lab switch with unique community
+  #   labels: { site: lab, role: access }
+  #   address: { host: 10.99.0.1, port: 161 }
+  #   auth:
+  #     version: 2c
+  #     community: "CHANGE_ME"
+
+defaults:
+  timeout: 5s
+  retries: 1
+  max_repetitions: 25
+  walk_max_oids: 1000

@@ -1,0 +1,13 @@
+name: linux_timedatectl
+version: "1.0"
+description: 查看系统时间与时区（timedatectl）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

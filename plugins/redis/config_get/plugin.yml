@@ -1,0 +1,25 @@
+name: redis_config_get
+version: "1.0"
+description: Redis CONFIG GET（只读，禁止 CONFIG SET）
+type: query
+
+target:
+  type: redis
+
+input:
+  redis:
+    type: string
+    required: true
+    description: redis.yaml 中的实例 name
+
+  db:
+    type: number
+    required: false
+    description: Redis 逻辑库编号（SELECT），缺省 0
+
+  pattern:
+    type: string
+    required: true
+    description: CONFIG GET 匹配模式，如 maxmemory 或 *
+runtime: javascript
+timeout: 30s

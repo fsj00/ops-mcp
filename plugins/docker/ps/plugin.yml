@@ -1,0 +1,17 @@
+name: docker_ps
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker ps，列出容器
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  all:
+    type: boolean
+    required: false
+    description: 是否包含已停止容器，默认 false
+runtime: javascript
+timeout: 15s

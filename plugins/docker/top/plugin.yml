@@ -1,0 +1,21 @@
+name: docker_top
+version: "1.0"
+description: 在指定主机上通过 SSH 执行 docker top，查看容器内进程
+type: command
+target:
+  type: docker
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  container:
+    type: string
+    required: true
+    description: 容器名或 ID
+  ps_args:
+    type: string
+    required: false
+    description: 传给底层 ps 的额外参数（可选）
+runtime: javascript
+timeout: 15s

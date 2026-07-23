@@ -1,0 +1,84 @@
+# 含真实密钥的本地配置（勿提交）
+config/hosts.yaml
+config/databases.yaml
+config/redis.yaml
+config/kafka.yaml
+config/apis.yaml
+config/commands.yaml
+config/snmp.yaml
+# 本地 mTLS 证书（勿提交）
+config/certs/
+
+# 本地环境 / 密钥
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# 临时目录 / 误放在根目录的配置
+.tmp/
+/ops-mcp.yaml
+
+# 构建产物
+bin/
+dist/
+*.exe
+*.test
+*.out
+coverage.out
+coverage.html
+
+# 本地联调 / 示例工程（勿提交）
+test-mcp/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+.__*
+__MACOSX/
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# 编辑器 / IDE
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.fleet/
+.zed/
+.eclipse/
+.settings/
+*.iml
+nbproject/
+.project
+.classpath
+.factorypath
+
+# 其它常见工具缓存
+.cache/
+.history/
+*.log
+.turbo/
+.parcel-cache/
+.eslintcache
+.npm/
+.yarn/
+.pnpm-store/

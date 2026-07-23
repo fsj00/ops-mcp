@@ -1,0 +1,17 @@
+name: linux_df
+version: "1.0"
+description: 查看文件系统磁盘空间（df -h）
+type: command
+target:
+  type: ssh
+input:
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+  path:
+    type: string
+    required: false
+    description: 可选路径，仅显示该挂载点
+runtime: javascript
+timeout: 10s

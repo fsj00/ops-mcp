@@ -1,0 +1,28 @@
+# 本地开发用 TCP/UDP echo（联调 ctx.tcp / ctx.udp）
+# 用法：make net-up  或  docker compose -f deploy/dev-net/docker-compose.yml up -d
+#
+# 宿主机：TCP 19090 / UDP 19091
+# 容器内：TCP 9090 / UDP 9091
+
+services:
+  net-echo:
+    image: python:3.12-alpine
+    container_name: ops-mcp-net-echo
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./echo_server.py:/app/echo_server.py:ro
+    command: ["python3", "/app/echo_server.py"]
+    ports:
+      - "19090:9090/tcp"
+      - "19091:9091/udp"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python3 -c \"import socket;s=socket.create_connection(('127.0.0.1',9090),2);s.close()\"",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 3s

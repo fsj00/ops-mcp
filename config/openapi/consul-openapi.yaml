@@ -1,0 +1,306 @@
+openapi: 3.0.3
+info:
+  title: Consul ReadOnly API
+  description: |
+    Read-only HashiCorp Consul HTTP API.
+
+    Designed for:
+    - AI Agent
+    - MCP integration
+    - Service discovery troubleshooting
+
+    Only GET APIs are exposed.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8500
+tags:
+  - name: Agent
+  - name: Catalog
+  - name: Health
+  - name: KV
+  - name: Cluster
+  - name: Metrics
+x-mcp:
+  readonly: true
+  category: service-discovery
+  risk: low
+paths:
+  /v1/agent/self:
+    get:
+      tags:
+        - Agent
+      summary: Get local agent information
+      operationId: consul_get_agent_self
+      responses:
+        '200':
+          description: Agent information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsulAgentResponse'
+  /v1/agent/members:
+    get:
+      tags:
+        - Cluster
+      summary: List Consul cluster members
+      operationId: consul_list_members
+      responses:
+        '200':
+          description: Members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsulMember'
+  /v1/catalog/datacenters:
+    get:
+      tags:
+        - Catalog
+      summary: List datacenters
+      operationId: consul_get_datacenters
+      responses:
+        '200':
+          description: Datacenters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /v1/catalog/services:
+    get:
+      tags:
+        - Catalog
+      summary: List registered services
+      operationId: consul_list_services
+      responses:
+        '200':
+          description: Services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsulServicesResponse'
+  /v1/catalog/service/{service}:
+    get:
+      tags:
+        - Catalog
+      summary: Get service instances
+      operationId: consul_get_service_nodes
+      parameters:
+        - name: service
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Service nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsulServiceNode'
+  /v1/health/service/{service}:
+    get:
+      tags:
+        - Health
+      summary: Get service health status
+      operationId: consul_get_health_service
+      parameters:
+        - name: service
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: passing
+          in: query
+          description: Only passing instances
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsulHealthService'
+  /v1/health/node/{node}:
+    get:
+      tags:
+        - Health
+      summary: Get node health
+      operationId: consul_get_health_node
+      parameters:
+        - name: node
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Node health
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsulHealthCheck'
+  /v1/kv/{key}:
+    get:
+      tags:
+        - KV
+      summary: Read KV value
+      operationId: consul_get_kv
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: recurse
+          in: query
+          description: Recursive list
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: KV value
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsulKVItem'
+  /v1/status/leader:
+    get:
+      tags:
+        - Cluster
+      summary: Get Raft leader
+      operationId: consul_get_leader
+      responses:
+        '200':
+          description: Leader address
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v1/agent/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get Consul metrics
+      operationId: consul_get_metrics
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum:
+              - prometheus
+              - json
+      responses:
+        '200':
+          description: Metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+    ConsulAgentResponse:
+      type: object
+      properties:
+        Config:
+          type: object
+          additionalProperties: true
+        DebugConfig:
+          type: object
+          additionalProperties: true
+        Member:
+          $ref: '#/components/schemas/ConsulMember'
+    ConsulMember:
+      type: object
+      properties:
+        Name:
+          type: string
+        Addr:
+          type: string
+        Port:
+          type: integer
+        Status:
+          type: integer
+        Tags:
+          type: object
+          additionalProperties:
+            type: string
+    ConsulServicesResponse:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
+    ConsulServiceNode:
+      type: object
+      properties:
+        Node:
+          type: string
+        Address:
+          type: string
+        ServiceName:
+          type: string
+        ServiceAddress:
+          type: string
+        ServicePort:
+          type: integer
+        ServiceTags:
+          type: array
+          items:
+            type: string
+    ConsulHealthService:
+      type: object
+      properties:
+        Node:
+          type: object
+          additionalProperties: true
+        Service:
+          type: object
+          additionalProperties: true
+        Checks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsulHealthCheck'
+    ConsulHealthCheck:
+      type: object
+      properties:
+        Node:
+          type: string
+        CheckID:
+          type: string
+        Name:
+          type: string
+        Status:
+          type: string
+        Output:
+          type: string
+    ConsulKVItem:
+      type: object
+      properties:
+        Key:
+          type: string
+        Value:
+          type: string
+        ModifyIndex:
+          type: integer
+        CreateIndex:
+          type: integer

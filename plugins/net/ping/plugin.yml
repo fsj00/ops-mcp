@@ -1,0 +1,17 @@
+name: host_ping
+version: "1.0"
+description: 在本机执行 ping（只读探测）；须在 commands.yaml 登记 name=ping
+type: command
+target:
+  type: command
+input:
+  host:
+    type: string
+    required: true
+    description: 目标主机名或 IP
+  count:
+    type: number
+    required: false
+    description: 发包次数（-c）；缺省 3
+runtime: javascript
+timeout: 15s

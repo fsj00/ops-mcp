@@ -1,0 +1,58 @@
+redis:
+  - name: local-redis
+    description: local docker redis (dev)
+    labels:
+      env: dev
+    connection:
+      host: 127.0.0.1
+      port: 6379
+      # Redis 6+ ACL 用户名；无 ACL 可省略或留空
+      username: ""
+      # 无密码实例可省略或留空 ""
+      password: "CHANGE_ME"
+      # 逻辑库 db 不在此配置；由各 redis_* Tool 的参数 db 指定，缺省 0
+    readonly: true
+    # SCAN / SLOWLOG / CLIENT LIST / ZRANGE sample 等最大条数，缺省 1000
+    limit: 1000
+
+  # - name: prod-cache
+  #   description: production redis with ACL
+  #   labels:
+  #     env: production
+  #     app: cache
+  #   connection:
+  #     host: 10.10.3.10
+  #     port: 6379
+  #     username: readonly
+  #     password: "CHANGE_ME"
+  #   readonly: true
+  #   limit: 1000
+
+  # mTLS：开启 TLS，并提供客户端证书（可与 password/ACL 叠加）
+  # ca / cert / private_key 各支持：正文 PEM、*_file 路径、或文件内容 base64（内容与文件互斥）
+  # - name: prod-redis-mtls
+  #   description: redis with mutual TLS
+  #   labels:
+  #     env: production
+  #   connection:
+  #     host: redis.example.com
+  #     port: 6380
+  #     # password / username 可选；mTLS 场景可仅用证书
+  #     tls:
+  #       enabled: true
+  #       server_name: redis.example.com   # SNI / 证书校验名；缺省用 host
+  #       ca_file: /etc/ops-mcp/certs/ca.crt
+  #       cert_file: /etc/ops-mcp/certs/client.crt
+  #       private_key_file: /etc/ops-mcp/certs/client.key
+  #       # 也可用内容字段（勿提交真实内容）：
+  #       # ca: |
+  #       #   -----BEGIN CERTIFICATE-----
+  #       # cert: |
+  #       #   -----BEGIN CERTIFICATE-----
+  #       # private_key: |
+  #       #   -----BEGIN PRIVATE KEY-----
+  #       # 或 base64：
+  #       # ca: "LS0tLS1CRUdJTi..."
+  #       # insecure_skip_verify: false   # 仅本地排障可 true
+  #   readonly: true
+  #   limit: 1000

@@ -1,0 +1,17 @@
+name: linux_cat
+version: "1.0"
+description: 读取远程文件内容
+type: command
+target:
+  type: ssh
+input:
+  path:
+    type: string
+    required: true
+    description: 文件路径
+  host:
+    type: string
+    required: true
+    description: hosts.yaml 中的主机 name
+runtime: javascript
+timeout: 10s

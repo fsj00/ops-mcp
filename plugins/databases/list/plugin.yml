@@ -1,0 +1,9 @@
+name: list_databases
+version: "1.0"
+description: 列出当前可用的数据库（来自 databases.yaml），返回 name、description、labels、type、connection 等元数据，不含密码
+type: query
+target:
+  type: config
+input: {}
+runtime: javascript
+timeout: 5s

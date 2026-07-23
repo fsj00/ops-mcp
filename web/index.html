@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ops-mcp</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --border: #2d3a4d;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3d9cf0;
+      --danger: #e85d5d;
+      --ok: #3ecf8e;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 600px at 10% -10%, #1b2a44 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 20, 25, 0.85);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: 0.02em;
+    }
+    h1 span { color: var(--accent); }
+    .auth {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-left: auto;
+    }
+    input[type="password"], input[type="text"], input[type="search"] {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.7rem;
+      border-radius: 6px;
+      min-width: 220px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+    input[type="search"] {
+      min-width: 200px;
+      background: var(--bg);
+    }
+    button {
+      background: var(--accent);
+      color: #041018;
+      border: 0;
+      border-radius: 6px;
+      padding: 0.45rem 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    #status {
+      font-size: 0.85rem;
+      color: var(--muted);
+      width: 100%;
+    }
+    #status.err { color: var(--danger); }
+    #status.ok { color: var(--ok); }
+    main {
+      padding: 1.25rem 1.5rem 2.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+    nav.tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    nav.tabs button {
+      background: var(--panel);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+    nav.tabs button.active {
+      color: var(--text);
+      border-color: var(--accent);
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
+    section.panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      display: none;
+    }
+    section.panel.active { display: block; }
+    .panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 180px;
+    }
+    .panel-head h2 small {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 0.85rem;
+    }
+    .panel-meta {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 0 0 0.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+    th.sortable {
+      white-space: nowrap;
+    }
+    button.sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+    button.sort-btn:hover {
+      color: var(--text);
+      border-color: var(--border);
+    }
+    button.sort-btn .arrow { color: var(--accent); font-family: var(--mono); }
+    code, .mono { font-family: var(--mono); font-size: 0.82rem; }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      max-height: 160px;
+      overflow: auto;
+    }
+    .empty { color: var(--muted); padding: 0.5rem 0; }
+  </style>
+</head>
+<body data-ops-mcp-ui="1">
+  <header>
+    <h1><span>ops-mcp</span> console</h1>
+    <div class="auth">
+      <input id="token" type="password" placeholder="API token" autocomplete="off" />
+      <button id="loadBtn" type="button">Load</button>
+      <button id="clearBtn" type="button" class="secondary">Clear</button>
+    </div>
+    <div id="status">输入 token 后加载配置与 Tools（静态页公开，API 仍需鉴权）</div>
+  </header>
+  <main>
+    <nav class="tabs" id="tabs"></nav>
+    <div id="panels"></div>
+  </main>
+  <script>
+    const STORAGE_KEY = "ops-mcp-token";
+    const ENDPOINTS = [
+      { id: "tools", label: "Tools", path: "/api/tools", key: "tools" },
+      { id: "plugins", label: "Plugins", path: "/api/plugins", key: "plugins" },
+      { id: "hosts", label: "Hosts", path: "/api/hosts", key: "hosts" },
+      { id: "databases", label: "Databases", path: "/api/databases", key: "databases" },
+      { id: "redis", label: "Redis", path: "/api/redis", key: "redis" },
+      { id: "kafka", label: "Kafka", path: "/api/kafka", key: "kafka" },
+      { id: "apis", label: "APIs", path: "/api/apis", key: "apis" },
+      { id: "commands", label: "Commands", path: "/api/commands", key: "commands" },
+      { id: "snmp", label: "SNMP", path: "/api/snmp", key: "devices" },
+    ];
+
+    const tokenInput = document.getElementById("token");
+    const statusEl = document.getElementById("status");
+    const tabsEl = document.getElementById("tabs");
+    const panelsEl = document.getElementById("panels");
+    const state = {};
+    /** @type {Record<string, { sortDir: "asc"|"desc", query: string }>} */
+    const ui = {};
+
+    function ensureUI(id) {
+      if (!ui[id]) ui[id] = { sortDir: "asc", query: "" };
+      return ui[id];
+    }
+
+    function setStatus(msg, kind) {
+      statusEl.textContent = msg;
+      statusEl.className = kind || "";
+    }
+
+    function authHeaders() {
+      const token = tokenInput.value.trim();
+      if (!token) return {};
+      return { Authorization: "Bearer " + token };
+    }
+
+    function activate(id) {
+      document.querySelectorAll("nav.tabs button").forEach((b) => {
+        b.classList.toggle("active", b.dataset.id === id);
+      });
+      document.querySelectorAll("section.panel").forEach((p) => {
+        p.classList.toggle("active", p.id === "panel-" + id);
+      });
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[c]);
+    }
+
+    function cell(v) {
+      if (v == null || v === "") return "<span class=\"empty\">—</span>";
+      if (typeof v === "object") {
+        return "<pre>" + escapeHtml(JSON.stringify(v, null, 2)) + "</pre>";
+      }
+      return "<span class=\"mono\">" + escapeHtml(String(v)) + "</span>";
+    }
+
+    function columnsFor(id, rows) {
+      if (!rows.length) return ["name", "description"];
+      if (id === "tools") return ["name", "description", "inputSchema"];
+      if (id === "plugins") return ["name", "version", "description", "type", "target", "timeout", "path"];
+      if (id === "hosts") return ["name", "description", "address", "auth_type", "username", "labels"];
+      if (id === "databases") return ["name", "type", "description", "connection", "readonly", "limit", "labels"];
+      if (id === "redis" || id === "kafka") return ["name", "description", "connection", "readonly", "limit", "labels"];
+      if (id === "apis") return ["name", "description", "base_url", "openapi", "discovery", "tools_count", "labels"];
+      if (id === "commands") return ["name", "path", "description", "timeout", "labels"];
+      if (id === "snmp") return ["name", "description", "address", "auth_mode", "credential", "auth", "labels"];
+      return Object.keys(rows[0]);
+    }
+
+    function sortByName(rows, dir) {
+      const mul = dir === "desc" ? -1 : 1;
+      return rows.slice().sort((a, b) => {
+        const an = String(a && a.name != null ? a.name : "");
+        const bn = String(b && b.name != null ? b.name : "");
+        return mul * an.localeCompare(bn, undefined, { sensitivity: "base", numeric: true });
+      });
+    }
+
+    function filterRows(rows, query) {
+      const q = String(query || "").trim().toLowerCase();
+      if (!q) return rows;
+      return rows.filter((row) => {
+        const name = String(row && row.name != null ? row.name : "").toLowerCase();
+        const desc = String(row && row.description != null ? row.description : "").toLowerCase();
+        return name.includes(q) || desc.includes(q);
+      });
+    }
+
+    function visibleRows(id) {
+      const cfg = ensureUI(id);
+      const all = Array.isArray(state[id]) ? state[id] : [];
+      return sortByName(filterRows(all, cfg.query), cfg.sortDir);
+    }
+
+    function renderTableBody(id, rows) {
+      if (!rows.length) {
+        const all = Array.isArray(state[id]) ? state[id] : [];
+        const msg = all.length ? "无匹配结果" : "暂无数据";
+        return "<p class=\"empty\">" + msg + "</p>";
+      }
+      const cols = columnsFor(id, rows);
+      const cfg = ensureUI(id);
+      const arrow = cfg.sortDir === "asc" ? "↑" : "↓";
+      let html = "<table><thead><tr>";
+      for (const c of cols) {
+        if (c === "name") {
+          html += "<th class=\"sortable\"><button type=\"button\" class=\"sort-btn\" data-sort=\"" +
+            escapeHtml(id) + "\" title=\"按 name 排序\">name <span class=\"arrow\">" + arrow +
+            "</span></button></th>";
+        } else {
+          html += "<th>" + escapeHtml(c) + "</th>";
+        }
+      }
+      html += "</tr></thead><tbody>";
+      for (const row of rows) {
+        html += "<tr>" + cols.map((c) => "<td>" + cell(row[c]) + "</td>").join("") + "</tr>";
+      }
+      html += "</tbody></table>";
+      return html;
+    }
+
+    function refreshPanel(id) {
+      const section = document.getElementById("panel-" + id);
+      if (!section) return;
+      const cfg = ensureUI(id);
+      const all = Array.isArray(state[id]) ? state[id] : [];
+      const rows = visibleRows(id);
+      const meta = section.querySelector(".panel-meta");
+      const body = section.querySelector(".panel-body");
+      if (meta) {
+        meta.textContent = "显示 " + rows.length + " / " + all.length;
+      }
+      if (body) {
+        body.innerHTML = renderTableBody(id, rows);
+        const sortBtn = body.querySelector("button.sort-btn");
+        if (sortBtn) {
+          sortBtn.addEventListener("click", () => {
+            cfg.sortDir = cfg.sortDir === "asc" ? "desc" : "asc";
+            refreshPanel(id);
+          });
+        }
+      }
+      const search = section.querySelector("input.panel-search");
+      if (search && search.value !== cfg.query) search.value = cfg.query;
+    }
+
+    function renderTabs() {
+      const active = document.querySelector("nav.tabs button.active");
+      const activeId = active ? active.dataset.id : (ENDPOINTS[0] && ENDPOINTS[0].id);
+      tabsEl.innerHTML = "";
+      panelsEl.innerHTML = "";
+      ENDPOINTS.forEach((ep) => {
+        ensureUI(ep.id);
+        const n = Array.isArray(state[ep.id]) ? state[ep.id].length : 0;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.id = ep.id;
+        btn.textContent = ep.label + " (" + n + ")";
+        btn.addEventListener("click", () => activate(ep.id));
+        if (ep.id === activeId) btn.classList.add("active");
+        tabsEl.appendChild(btn);
+
+        const section = document.createElement("section");
+        section.className = "panel" + (ep.id === activeId ? " active" : "");
+        section.id = "panel-" + ep.id;
+        section.innerHTML =
+          "<div class=\"panel-head\">" +
+            "<h2>" + escapeHtml(ep.label) + " <small>" + escapeHtml(ep.path) + "</small></h2>" +
+            "<input class=\"panel-search\" type=\"search\" placeholder=\"搜索 name / description\" />" +
+          "</div>" +
+          "<p class=\"panel-meta\"></p>" +
+          "<div class=\"panel-body\"></div>";
+        const search = section.querySelector("input.panel-search");
+        search.value = ui[ep.id].query;
+        search.addEventListener("input", () => {
+          ui[ep.id].query = search.value;
+          refreshPanel(ep.id);
+        });
+        panelsEl.appendChild(section);
+        refreshPanel(ep.id);
+      });
+      if (activeId) activate(activeId);
+    }
+
+    async function loadAll() {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        setStatus("请先输入 API token", "err");
+        return;
+      }
+      sessionStorage.setItem(STORAGE_KEY, token);
+      setStatus("加载中…");
+      document.getElementById("loadBtn").disabled = true;
+      try {
+        const results = await Promise.all(ENDPOINTS.map(async (ep) => {
+          const res = await fetch(ep.path, { headers: authHeaders() });
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); } catch (_) { data = null; }
+          return { ep, res, data, text };
+        }));
+        const unauthorized = results.find((r) => r.res.status === 401);
+        if (unauthorized) {
+          setStatus("鉴权失败（401）：请检查 token", "err");
+          return;
+        }
+        const failed = results.find((r) => !r.res.ok);
+        if (failed) {
+          setStatus("请求失败 " + failed.ep.path + ": HTTP " + failed.res.status, "err");
+          return;
+        }
+        for (const r of results) {
+          const list = r.data && Array.isArray(r.data[r.ep.key]) ? r.data[r.ep.key] : [];
+          state[r.ep.id] = list;
+          ensureUI(r.ep.id);
+        }
+        renderTabs();
+        const totalTools = (state.tools || []).length;
+        setStatus("已加载：Tools " + totalTools + "，Plugins " + (state.plugins || []).length, "ok");
+      } catch (err) {
+        setStatus("加载失败：" + (err && err.message ? err.message : String(err)), "err");
+      } finally {
+        document.getElementById("loadBtn").disabled = false;
+      }
+    }
+
+    document.getElementById("loadBtn").addEventListener("click", loadAll);
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      tokenInput.value = "";
+      sessionStorage.removeItem(STORAGE_KEY);
+      Object.keys(state).forEach((k) => delete state[k]);
+      Object.keys(ui).forEach((k) => delete ui[k]);
+      renderTabs();
+      setStatus("已清除 token 与本地缓存");
+    });
+    tokenInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loadAll();
+    });
+
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) tokenInput.value = saved;
+    renderTabs();
+  </script>
+</body>
+</html>

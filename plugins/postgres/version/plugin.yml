@@ -1,0 +1,16 @@
+name: postgres_version
+version: "1.0"
+description: 查询指定 PostgreSQL 数据库的服务器版本
+type: query
+
+target:
+  type: postgresql
+
+input:
+  database:
+    type: string
+    required: true
+    description: databases.yaml 中的数据库 name
+
+runtime: javascript
+timeout: 15s
